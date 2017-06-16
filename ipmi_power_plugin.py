@@ -3,25 +3,16 @@
 import sys
 import commands
 import os
-import xml.etree.ElementTree as xmlET
 import re
 
-def xpath_result( root, xpath ):
-    res = root.findall( xpath )
-    if len( res ) == 1:
-        return res[0].text
-    else:
-        return ""
-
 class IPMIPowerhandler:
-    def __init__( self, request_from_ifx ):
-        xmlRoot = xmlET.fromstring( request_from_ifx )
+    def __init__( self, ip, username, password ):
         #Get IP-address of IPMI.
-        self.__IP = xpath_result( xmlRoot, "./device_params/ip" )
-        #Get IPMI user, who should have rights  to power management.
-        self.__User = xpath_result( xmlRoot, "./device_params/user" ).replace( "`", "\\`" )
-        #Password of IPMI in  ipmitool will be sent by environment variable, for security reasons
-        os.putenv( "IPMI_PASSWORD", xpath_result( xmlRoot, "./device_params/pass" ) )
+        self.__IP = ip
+        #Get IPMI user, who should have rights to power management.
+        self.__User = username
+        #Password of IPMI in ipmitool will be sent by environment variable, for security reasons
+        os.putenv( "IPMI_PASSWORD", password )
         self.__PowerUsage()
 
     def __PowerUsage( self ):
@@ -81,8 +72,7 @@ class IPMIPowerhandler:
 def main():
     #Read input stream and create handler' object
     #for processing DCImanager's request.
-    request_str = sys.stdin.read()
-    IPMIPowerhandler( request_str )
+    IPMIPowerhandler( sys.argv[1], sys.argv[2], sys.argv[3] )
 
 #Launch of main function
 main()
