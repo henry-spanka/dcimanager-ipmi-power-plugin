@@ -44,7 +44,7 @@ class IPMIPowerhandler:
     def __IPMIToolStart( self ):
         #Start of ipmitool. If there is -E key - password
         #will be get from environment variable
-        return self.__IPMITool + " -I lanplus -H " + self.__IP + " -U " + self.__User + " -E "
+        return self.__IPMITool + " -I lanplus -H " + self.__IP + " -U " + self.__User + " -L User -E "
 
     def __ConnectionProblem( self, ipmi_res ):
         #Return an error. Problem will be registered in DCImanager
